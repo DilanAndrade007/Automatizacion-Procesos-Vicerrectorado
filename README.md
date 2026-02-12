@@ -227,41 +227,46 @@ jupyter notebook Unificacion/2025B_Observaciones_Preplanificacion.ipynb
 
 ---
 
-## 🔄 Flujo de Ejecución Recomendado
+## 🔄 Flujo de Ejecución
 
-Aunque los módulos son **semi-independientes**, el flujo óptimo es:
+Los módulos del proyecto son **mayormente independientes** entre sí. Solo el módulo **Unificacion** requiere outputs de otros módulos.
 
 ```mermaid
 graph TD
-    A[AsignaturasPorNivel] --> B[ValidacionActividades]
-    A --> C[Comparacion2025A]
-    B --> D[Unificacion]
-    C --> D
-    E[proyectos] -.-> D
+    B[ValidacionActividades] --> D[Unificacion]
+    C[Comparacion2025A] --> D
     D --> F[2025B_Observaciones.xlsx]
+    A[AsignaturasPorNivel]
+    E[proyectos]
 ```
 
-### Orden sugerido:
+### Dependencias reales:
 
-1. **AsignaturasPorNivel** (si hay PDFs nuevos de mallas)
-   - Genera bases de datos de códigos por nivel/carrera
-   - Valida asignaciones docentes
+**Unificacion** (Módulo final) **requiere**:
+- Output de **ValidacionActividades**: `Reporte_actividades_3_4.xlsx`
+- Output de **Comparacion2025A**: `Reporte_B_menor_A.xlsx`
 
-2. **ValidacionActividades**
+**Módulos independientes** (ejecutar según necesidad):
+- **AsignaturasPorNivel**: Valida mallas curriculares y asignaciones docentes
+- **proyectos**: Análisis exploratorio de proyectos de investigación
+
+### Orden sugerido para generar el reporte final:
+
+1. **ValidacionActividades**
    - Identifica docentes sin actividades obligatorias
    - Genera `Reporte_actividades_3_4.xlsx`
 
-3. **Comparacion2025A**
+2. **Comparacion2025A**
    - Compara cargas horarias entre períodos
    - Genera `Reporte_B_menor_A.xlsx`
 
-4. **proyectos** (opcional, según necesidad)
-   - Análisis de proyectos de investigación
-   - Validaciones de horas aprobadas vs disponibles
-
-5. **Unificacion** ⭐ **(MÓDULO FINAL)**
-   - Consolida todo en un único reporte
+3. **Unificacion** ⭐ **(MÓDULO FINAL)**
+   - Consolida ValidacionActividades + Comparacion2025A
    - Genera `2025B_Observaciones.xlsx`
+
+**Ejecutar según necesidad**:
+- **AsignaturasPorNivel**: Solo cuando haya PDFs nuevos de mallas o se requiera validar asignaciones
+- **proyectos**: Para análisis de horas de investigación (actualmente no integrado en Unificacion)
 
 ---
 
